@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Click3DCursor))]
 public class ClickController : MonoBehaviour
 {
     [Header("Movement Settings")] public float angularDrag = 0.05f;
@@ -39,7 +41,7 @@ public class ClickController : MonoBehaviour
     {
         _body = GetComponent<Rigidbody>();
         ResetRigidBody();
-        _groundChecker = GetComponentInChildren<GroundChecker>();
+        _groundChecker = FindObjectOfType<GroundChecker>();
         _arrowHandler = GetComponentInChildren<ClickArrowHandler>();
         _cursor3d = GetComponent<Click3DCursor>();
         _trail = GetComponent<TrailRenderer>();
@@ -61,7 +63,7 @@ public class ClickController : MonoBehaviour
     /// If cursor clicks ground, update target to location of click 
     /// </summary>
     void UpdateTargetRollDir()
-    {
+    { 
         targetSet = _cursor3d.TargetSet();
         if (targetSet)
         {

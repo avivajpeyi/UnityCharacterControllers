@@ -7,14 +7,20 @@ public class Click3DCursor : MonoBehaviour
 {
     public GameObject placedTarget;
     public GameObject hoverTarget;
-
-    public LayerMask GroundLayer;
+    
+    private int GroundLayerIndex; 
 
     private bool cursorPointingToGround;
     private Camera cam;
 
+
     private void Start()
     {
+        GroundLayerIndex = LayerMask.NameToLayer("Ground");
+        if (GroundLayerIndex == -1)
+        {
+            Debug.LogError("Ground Layer Does not exist");
+        }
         cam = FindObjectOfType<Camera>();
         placedTarget.transform.parent = null;
         hoverTarget.transform.parent = null;
@@ -43,12 +49,11 @@ public class Click3DCursor : MonoBehaviour
     {
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, GroundLayer))
+        if (Physics.Raycast(ray, out hit, 1000, 1 << GroundLayerIndex))
         {
             Cursor.visible = false;
             hoverTarget.SetActive(true);
-            Vector3 pos = new Vector3(hit.point.x, hoverTarget.transform.position.y,
-                hit.point.z);
+            Vector3 pos = new Vector3(hit.point.x, hit.point.y, hit.point.z);
             hoverTarget.transform.position = pos;
             placedTarget.transform.position = pos;
         }
